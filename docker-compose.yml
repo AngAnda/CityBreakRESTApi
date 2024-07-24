@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  redis-weather:
+    image: redis
+    networks:
+      - backend
+  citybreak:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=abc123
+      - MYSQL_USER=citybreak
+      - MYSQL_PASSWORD=abc123
+      - MYSQL_DATABASE=citybreak
+    expose:
+      - 3306
+    networks:
+      - backend
+  weather:
+    build: weather
+    environment:
+      - REDIS_HOST=redis-weather
+    ports:
+      - 5001:5000
+    networks:
+      - backend
+    depends_on:
+      - redis-weather
+  events:
+    build: events  # Ensure the path to the Dockerfile directory is correct
+    environment:
+      - DB_HOST=citybreak
+      - DB_USER=citybreak
+      - DB_PASSWORD=abc123
+      - DB_NAME=citybreak
+      - HOST=0.0.0.0
+      - PORT=5000
+    ports:
+      - 5000:5000
+    networks:
+      - backend
+    depends_on:
+      - citybreak
+networks:
+  backend:
+    driver: bridge
+    name: backend-network

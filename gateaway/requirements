@@ -1,0 +1,11 @@
+Flask
+flask-RESTful
+requests
+Flask-login
+Flask-session
+Flask-SQLAlchemy
+SQLAlchemy
+mysqlclient
+wtforms
+Flask-WTF
+WTForms

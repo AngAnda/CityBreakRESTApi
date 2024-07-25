@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Login</title>
+<style>
+    /* Stiluri aditionale */
+</style>
+<script>
+    // Scripturi aditionale
+</script>
+{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+
+{% from '_formhelpers.html' import render_field %}
+
+<form method="POST" action="{{ url_for('login', next=next) }}">
+    {{ form.hidden_tag() }}
+    <dl>
+        {{ render_field(form.email, maxlength=128) }}
+        {{ render_field(form.password, maxlength=128) }}
+    </dl>
+    {{ form.submit() }}
+</form>
+
+{% endblock %}

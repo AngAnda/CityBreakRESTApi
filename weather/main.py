@@ -12,7 +12,6 @@ time.sleep(20)
 api = Api(app)
 client = redis.Redis(host=os.environ.get('REDIS_HOST', 'localhost'))
 
-# Preîncărcare date în Redis la inițializarea aplicației
 preload_data = {
     "Brasov-2024-07-24": {
         "temperature": "22°C",
@@ -59,6 +58,10 @@ class Weather(Resource):
         key = f'{city}-{date}' if date else city
         client.set(key, json.dumps(weather))
         return 'OK', 200
+
+    def put(self):
+        self.post()
+
 
 api.add_resource(Weather, '/weather')
 

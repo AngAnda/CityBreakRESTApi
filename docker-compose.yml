@@ -1,6 +1,17 @@
 version: '3.9'
 
 services:
+  auth-db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=abc123
+      - MYSQL_USER=auth
+      - MYSQL_PASSWORD=abc123
+      - MYSQL_DATABASE=auth
+    expose:
+      - 3306
+    networks:
+      - backend
   redis-weather:
     image: redis
     networks:
@@ -41,6 +52,21 @@ services:
       - backend
     depends_on:
       - citybreak
+  gateaway:
+    build: gateaway
+    environment:
+      - EVENTS_SERVICE_URL=http://events:5000/events
+      - WEATHER_SERVICE_URL=http://weather:5000/weather
+      - DB_HOST=auth-db
+      - DB_USER=auth
+      - DB_PASSWORD=abc123
+    ports:
+      - 8080:5000
+    networks:
+      - backend
+    depends_on:
+      - events
+      - weather
 networks:
   backend:
     driver: bridge

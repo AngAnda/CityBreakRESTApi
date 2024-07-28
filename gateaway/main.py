@@ -10,22 +10,14 @@ app = Flask('gateway')
 time.sleep(20)
 api = Api(app)
 
-users = [
-    {"email": "user1@example.com", "password": "password1"},
-    {"email": "user2@example.com", "password": "password2"}
-]
-
 events_url = os.environ.get('EVENTS_SERVICE_URL')
 weather_url = os.environ.get('WEATHER_SERVICE_URL')
+auth_url = os.environ.get('AUTH_SERVICE_URL')
 
 def authenticate(email, password):
-    for user in users:
-        if user["email"] == email and user["password"] == password:
-            return True
-    return False
+    response = Post(auth_url, json={'email':email, 'password': password})
+    return response.status_code == 200
 
-
-@log_call
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
